@@ -6,13 +6,6 @@
 <body>
 
 </h1>Sensor Data </h1>
-</h2>Accelerometer Data</h2>
-
-<div id="acceleration-data">
-  <p>Acceleration X: <span id="accel-x">0</span></p>
-  <p>Acceleration Y: <span id="accel-y">0</span></p>
-  <p>Acceleration Z: <span id="accel-z">0</span></p>
-</div>
 
 </h2>Geolocation Data</h2>
 
@@ -25,10 +18,6 @@
 
 <div id="orientation-data">
   <p>Absolute Orientation Quaternion:</p>
-  <p>X: <span id="quat-x">0</span></p>
-  <p>Y: <span id="quat-y">0</span></p>
-  <p>Z: <span id="quat-z">0</span></p>
-  <p>W: <span id="quat-w">0</span></p>
   <p>Roll: <span id="roll">0</span></p>
   <p>Pitch: <span id="pitch">0</span></p>
   <p>yaw: <span id="yaw">0</span></p>
@@ -36,8 +25,6 @@
 
 
 <script type="module">
-// Assuming you have a working implementation of the Accelerometer sensor
-import { Accelerometer } from './src/motion-sensors.js';
 // Import the AbsoluteOrientationSensor class
 import { AbsoluteOrientationSensor } from './src/motion-sensors.js'; // Replace with the actual path to your implementation
 
@@ -74,11 +61,6 @@ sensor.addEventListener("reading", () => {
   const quaternion = sensor.quaternion;
     // Convert quaternion to Euler angles
   const eulerAngles = quaternionToEuler(quaternion);
-  // Update the orientation data on the page
-  document.querySelector('#quat-x').textContent = quaternion[0].toFixed(3);
-  document.querySelector('#quat-y').textContent = quaternion[1].toFixed(3);
-  document.querySelector('#quat-z').textContent = quaternion[2].toFixed(3);
-  document.querySelector('#quat-w').textContent = quaternion[3].toFixed(3);
     // Update the orientation data on the page
   document.querySelector('#roll').textContent = eulerAngles.roll.toFixed(2);
   document.querySelector('#pitch').textContent = eulerAngles.pitch.toFixed(2);
@@ -95,24 +77,6 @@ sensor.addEventListener("error", (event) => {
 // Start the orientation sensor
 sensor.start();
 
-// Create a new Accelerometer instance
-let accel = new Accelerometer({ frequency: 60 });
-
-// Handle errors
-accel.onerror = err => console.error(err);
-
-// Handle readings
-accel.onreading = (event) => {
-  const sensor = event.target;
-
-  // Update the acceleration data on the page
-  document.querySelector('#accel-x').textContent = sensor.x.toFixed(2);
-  document.querySelector('#accel-y').textContent = sensor.y.toFixed(2);
-  document.querySelector('#accel-z').textContent = sensor.z.toFixed(2);
-};
-
-// Start the accelerometer
-accel.start();
 
 // Geolocation code
 if ("geolocation" in navigator) {
