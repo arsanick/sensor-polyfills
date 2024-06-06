@@ -23,8 +23,12 @@
 </h1>Absolute Orientation Data</h1>
 
 <div id="orientation-data">
-    <p>Absolute Orientation: <span id="absolute-orientation">0</span></p>
-  </div>
+  <p>Absolute Orientation Quaternion:</p>
+  <p>X: <span id="quat-x">0</span></p>
+  <p>Y: <span id="quat-y">0</span></p>
+  <p>Z: <span id="quat-z">0</span></p>
+  <p>W: <span id="quat-w">0</span></p>
+</div>
 
 
 <script type="module">
@@ -44,7 +48,10 @@ sensor.addEventListener("reading", () => {
   // Access the quaternion data
   const quaternion = sensor.quaternion;
   // Update the orientation data on the page
-  document.querySelector('#absolute-orientation').textContent = JSON.stringify(quaternion);
+  document.querySelector('#quat-x').textContent = quaternion.x.toFixed(2);
+  document.querySelector('#quat-y').textContent = quaternion.y.toFixed(2);
+  document.querySelector('#quat-z').textContent = quaternion.z.toFixed(2);
+  document.querySelector('#quat-w').textContent = quaternion.w.toFixed(2);
 });
 
 // Event listener for handling errors
