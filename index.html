@@ -44,15 +44,22 @@ accel.onreading = (event) => {
 // Start the accelerometer
 accel.start();
 
+// Geolocation code
 if ("geolocation" in navigator) {
   /* geolocation is available */
-  navigator.geolocation.getCurrentPosition((position) => {
-    document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
-    document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
-  });
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 } else {
   /* geolocation IS NOT available */
   console.error("Geolocation is not available");
+}
+
+function successCallback(position) {
+  document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
+  document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
+}
+
+function errorCallback(error) {
+  alert(`ERROR(${error.code}): ${error.message}`);
 }
 </script>
 
