@@ -29,6 +29,9 @@
   <p>Y: <span id="quat-y">0</span></p>
   <p>Z: <span id="quat-z">0</span></p>
   <p>W: <span id="quat-w">0</span></p>
+  <p>Roll: <span id="roll">0</span></p>
+  <p>Pitch: <span id="pitch">0</span></p>
+  <p>yaw: <span id="yaw">0</span></p>
 </div>
 
 
@@ -37,6 +40,27 @@
 import { Accelerometer } from './src/motion-sensors.js';
 // Import the AbsoluteOrientationSensor class
 import { AbsoluteOrientationSensor } from './src/motion-sensors.js'; // Replace with the actual path to your implementation
+
+// Function to convert quaternion to Euler angles in degrees
+function quaternionToEuler(q) {
+  const x = q[0], y = q[1], z = q[2], w = q[3];
+
+  // Roll (x-axis rotation)
+  const roll = Math.atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y));
+
+  // Pitch (y-axis rotation)
+  let pitch = Math.asin(2 * (w * y - z * x));
+
+  // Yaw (z-axis rotation)
+  let yaw = Math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z));
+
+  // Convert radians to degrees
+  const rollDeg = roll * 180 / Math.PI;
+  const pitchDeg = pitch * 180 / Math.PI;
+  const yawDeg = yaw * 180 / Math.PI;
+
+  return { roll: rollDeg, pitch: pitchDeg, yaw: yawDeg };
+}
 
 // Options for the AbsoluteOrientationSensor
 const options = { frequency: 60, referenceFrame: "device" };
@@ -48,11 +72,17 @@ const sensor = new AbsoluteOrientationSensor(options);
 sensor.addEventListener("reading", () => {
   // Access the quaternion data
   const quaternion = sensor.quaternion;
+    // Convert quaternion to Euler angles
+  const eulerAngles = quaternionToEuler(quaternion);
   // Update the orientation data on the page
   document.querySelector('#quat-x').textContent = quaternion[0].toFixed(3);
   document.querySelector('#quat-y').textContent = quaternion[1].toFixed(3);
   document.querySelector('#quat-z').textContent = quaternion[2].toFixed(3);
   document.querySelector('#quat-w').textContent = quaternion[3].toFixed(3);
+    // Update the orientation data on the page
+  document.querySelector('#roll').textContent = eulerAngles.roll.toFixed(2);
+  document.querySelector('#pitch').textContent = eulerAngles.pitch.toFixed(2);
+  document.querySelector('#yaw').textContent = eulerAngles.yaw.toFixed(2);
 });
 
 // Event listener for handling errors
