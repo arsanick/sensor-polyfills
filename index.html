@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Accelerometer and geolocation Data</title>
+<title>Sensor Data</title>
 </head>
 <body>
 
@@ -13,17 +13,49 @@
   <p>Acceleration Z: <span id="accel-z">0</span></p>
 </div>
 
-</h1>geolocation Data</h1>
+</h1>Geolocation Data</h1>
 
 <div id="geolocation-data">
     <p>Latitude: <span id="latitude">0</span></p>
     <p>Longitude: <span id="longitude">0</span></p>
 </div>
 
+</h1>Absolute Orientation Data</h1>
+
+<div id="orientation-data">
+    <p>Absolute Orientation: <span id="absolute-orientation">0</span></p>
+  </div>
+
 
 <script type="module">
 // Assuming you have a working implementation of the Accelerometer sensor
 import { Accelerometer } from './src/motion-sensors.js';
+// Import the AbsoluteOrientationSensor class
+import { AbsoluteOrientationSensor } from './src/motion-sensors.js'; // Replace with the actual path to your implementation
+
+// Options for the AbsoluteOrientationSensor
+const options = { frequency: 60, referenceFrame: "device" };
+
+// Create a new AbsoluteOrientationSensor instance
+const sensor = new AbsoluteOrientationSensor(options);
+
+// Event listener for reading the sensor data
+sensor.addEventListener("reading", () => {
+  // Access the quaternion data
+  const quaternion = sensor.quaternion;
+  // Update the orientation data on the page
+  document.querySelector('#absolute-orientation').textContent = JSON.stringify(quaternion);
+});
+
+// Event listener for handling errors
+sensor.addEventListener("error", (event) => {
+  if (event.error.name === "NotReadableError") {
+    console.log("Sensor is not available.");
+  }
+});
+
+// Start the orientation sensor
+sensor.start();
 
 // Create a new Accelerometer instance
 let accel = new Accelerometer({ frequency: 60 });
