@@ -77,14 +77,31 @@ sensor.addEventListener("error", (event) => {
 // Start the orientation sensor
 sensor.start();
 
-
 // Geolocation code
-if ("geolocation" in navigator) {
-  /* geolocation is available */
-  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-} else {
-  /* geolocation IS NOT available */
-  console.error("Geolocation is not available");
+function requestGeolocationPermission() {
+  if ("permissions" in navigator) {
+    navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+      if (result.state === 'granted') {
+        getGeolocation();
+      } else if (result.state === 'prompt') {
+        result.onchange = function() {
+          getGeolocation();
+        };
+      } else {
+        console.error("Geolocation permission was denied.");
+      }
+    });
+  } else {
+    console.error("Permissions API is not available in this browser.");
+  }
+}
+
+function getGeolocation() {
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  } else {
+    console.error("Geolocation is not available.");
+  }
 }
 
 function successCallback(position) {
@@ -95,6 +112,9 @@ function successCallback(position) {
 function errorCallback(error) {
   alert(`ERROR(${error.code}): ${error.message}`);
 }
+
+// Request geolocation permission when the page loads
+requestGeolocationPermission();
 </script>
 
 </body>
