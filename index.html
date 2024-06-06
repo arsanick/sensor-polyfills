@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Accelerometer Data</title>
+<title>Accelerometer and geolocation Data</title>
 </head>
 <body>
 
@@ -13,12 +13,20 @@
   <p>Acceleration Z: <span id="accel-z">0</span></p>
 </div>
 
+</h1>geolocation Data</h1>
+
+<div id="geolocation-data">
+    <p>Latitude: <span id="latitude">0</span></p>
+    <p>Longitude: <span id="longitude">0</span></p>
+</div>
+
+
 <script type="module">
 // Assuming you have a working implementation of the Accelerometer sensor
 import { Accelerometer } from './src/motion-sensors.js';
 
 // Create a new Accelerometer instance
-let accel = new Accelerometer({ frequency: 60fergt });
+let accel = new Accelerometer({ frequency: 60 });
 
 // Handle errors
 accel.onerror = err => console.error(err);
@@ -35,6 +43,17 @@ accel.onreading = (event) => {
 
 // Start the accelerometer
 accel.start();
+
+if ("geolocation" in navigator) {
+  /* geolocation is available */
+  navigator.geolocation.getCurrentPosition((position) => {
+    document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
+    document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
+  });
+} else {
+  /* geolocation IS NOT available */
+  console.error("Geolocation is not available");
+}
 </script>
 
 </body>
