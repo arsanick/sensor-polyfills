@@ -49,8 +49,8 @@ sensor.addEventListener("reading", () => {
   // Access the quaternion data
   const quaternion = sensor.quaternion;
   // Update the orientation data on the page
-  document.querySelector('#quat-x').textContent = quaternion.x;
-  document.querySelector('#quat-y').textContent = quaternion.y;
+  document.querySelector('#quat-x').textContent = quaternion[1];
+  document.querySelector('#quat-y').textContent = quaternion[0];
   document.querySelector('#quat-z').textContent = quaternion.z;
   document.querySelector('#quat-w').textContent = quaternion.w;
 });
