@@ -113,9 +113,11 @@ function updateStatusGraphics(yaw) {
 }
 
 // Geolocation code
-/*function requestGeolocationPermission() {
+function requestGeolocationPermission() {
   if ("permissions" in navigator) {
     navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+            // Log the permission state
+      console.log(`Geolocation permission state: ${result.state}`);
       if (result.state === 'granted') {
         getGeolocation();
       } else if (result.state === 'prompt') {
@@ -129,7 +131,7 @@ function updateStatusGraphics(yaw) {
   } else {
     console.error("Permissions API is not available in this browser.");
   }
-}*/
+}
 
 function getGeolocation() {
   if ("geolocation" in navigator) {
@@ -144,7 +146,7 @@ function successCallback(position) {
   document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
 
   // Call the function to update the status graphics with the yaw angle from the sensor
-  // updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
+  updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
 }
 
 function errorCallback(error) {
@@ -152,7 +154,7 @@ function errorCallback(error) {
 }
 
 // Request geolocation permission when the page loads
-//requestGeolocationPermission();
+requestGeolocationPermission();
 </script>
 
 </body>
