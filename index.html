@@ -29,6 +29,8 @@
     <p>Longitude: <span id="longitude">0</span></p>
 </div>
 
+<button id="geoBtn" onclick="handlePermission()">Get Geolocation</button>
+
 <h2>Absolute Orientation Data</h2>
 
 <div id="orientation-data">
@@ -112,29 +114,33 @@ function updateStatusGraphics(yaw) {
   }
 }
 
-// Geolocation code
-function requestGeolocationPermission() {
-  if ("permissions" in navigator) {
-    navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
-            // Log the permission state
-      console.log(`Geolocation permission state: ${result.state}`);
-      if (result.state === 'granted') {
-        getGeolocation();
-      } else if (result.state === 'prompt') {
-        result.onchange = function() {
-          getGeolocation();
-        };
-      } else {
-        console.error("Geolocation permission was denied.");
-      }
+// Geolocation code using the button
+function handlePermission() {
+  navigator.permissions.query({ name: "geolocation" }).then((result) => {
+    if (result.state === "granted") {
+      report(result.state);
+      geoBtn.style.display = "none";
+      getLocation();
+    } else if (result.state === "prompt") {
+      report(result.state);
+      geoBtn.style.display = "none";
+      getLocation();
+    } else if (result.state === "denied") {
+      report(result.state);
+      geoBtn.style.display = "inline";
+    }
+    result.addEventListener("change", () => {
+      report(result.state);
     });
-  } else {
-    console.error("Permissions API is not available in this browser.");
-  }
+  });
 }
 
-function getGeolocation() {
-  if ("geolocation" in navigator) {
+function report(state) {
+  console.log(`Permission ${state}`);
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
   } else {
     console.error("Geolocation is not available.");
@@ -160,7 +166,7 @@ function errorCallback(error) {
 }
 
 // Request geolocation permission when the page loads
-requestGeolocationPermission();
+handlePermission();
 </script>
 
 </body>
