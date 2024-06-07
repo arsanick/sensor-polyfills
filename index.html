@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<h1>Sensor Data </h1>
+<h1>Sensor Data</h1>
 
 <h2>Geolocation Data</h2>
 
@@ -31,10 +31,9 @@
   <p>Absolute Orientation Quaternion:</p>
   <p>Roll: <span id="roll">0</span></p>
   <p>Pitch: <span id="pitch">0</span></p>
-  <p>yaw: <span id="yaw">0</span></p>
+  <p>Yaw: <span id="yaw">0</span></p>
   <div id="status"></div>
 </div>
-
 
 <script type="module">
 // Import the AbsoluteOrientationSensor class
@@ -71,12 +70,15 @@ const sensor = new AbsoluteOrientationSensor(options);
 sensor.addEventListener("reading", () => {
   // Access the quaternion data
   const quaternion = sensor.quaternion;
-    // Convert quaternion to Euler angles
+  // Convert quaternion to Euler angles
   const eulerAngles = quaternionToEuler(quaternion);
-    // Update the orientation data on the page
+  // Update the orientation data on the page
   document.querySelector('#roll').textContent = eulerAngles.roll.toFixed(2);
   document.querySelector('#pitch').textContent = eulerAngles.pitch.toFixed(2);
   document.querySelector('#yaw').textContent = eulerAngles.yaw.toFixed(2);
+
+  // Call the function to update the status graphics
+  updateStatusGraphics(eulerAngles.yaw);
 });
 
 // Event listener for handling errors
@@ -88,6 +90,23 @@ sensor.addEventListener("error", (event) => {
 
 // Start the orientation sensor
 sensor.start();
+
+// Function to update the status graphics based on the yaw angle
+function updateStatusGraphics(yaw) {
+  const statusElement = document.getElementById('status');
+  statusElement.innerHTML = ''; // Clear previous content
+  if (yaw > -20 && yaw < 20) {
+    const checkElement = document.createElement('span');
+    checkElement.className = 'check';
+    checkElement.textContent = '✔️';
+    statusElement.appendChild(checkElement);
+  } else {
+    const xElement = document.createElement('span');
+    xElement.className = 'x';
+    xElement.textContent = '❌';
+    statusElement.appendChild(xElement);
+  }
+}
 
 // Geolocation code
 function requestGeolocationPermission() {
@@ -122,23 +141,8 @@ function successCallback(position) {
   latitudeElement.textContent = position.coords.latitude.toFixed(2);
   longitudeElement.textContent = position.coords.longitude.toFixed(2);
 
-   // Check the yaw angle and update the graphics
-    // Check the yaw angle and update the graphics
-  const eulerAngles = quaternionToEuler(sensor.quaternion)
-  const yaw = eulerAngles.yaw;
-  const statusElement = document.getElementById('status');
-  statusElement.innerHTML = ''; // Clear previous content
-  if (yaw > -20 && yaw < 20) {
-      const checkElement = document.createElement('span');
-      checkElement.className = 'check';
-      checkElement.textContent = '✔️';
-      statusElement.appendChild(checkElement);
-  } else {
-      const xElement = document.createElement('span');
-      xElement.className = 'x';
-      xElement.textContent = '❌';
-      statusElement.appendChild(xElement);
-  }
+  // Call the function to update the status graphics with the yaw angle from the sensor
+  updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
 }
 
 function errorCallback(error) {
