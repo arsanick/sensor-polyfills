@@ -32,8 +32,7 @@
   <p>Roll: <span id="roll">0</span></p>
   <p>Pitch: <span id="pitch">0</span></p>
   <p>yaw: <span id="yaw">0</span></p>
-  <p id="check">✔️</p>
-  <p id="x">❌</p>
+  <div id="status"></div>
 </div>
 
 
@@ -118,19 +117,26 @@ function getGeolocation() {
 }
 
 function successCallback(position) {
-  document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
-  document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
-  // Check the yaw angle and update the graphics
-  const yaw = eulerAngles.yaw;
-  const check = document.getElementById('check');
-  const x = document.getElementById('x');
-  if (yaw > -20 && yaw < 20) {
-    check.style.display = 'block';
-    x.style.display = 'none';
-  } else {
-    check.style.display = 'none';
-    x.style.display = 'block';
-  }
+            const latitudeElement = document.querySelector('#latitude');
+            const longitudeElement = document.querySelector('#longitude');
+            latitudeElement.textContent = position.coords.latitude.toFixed(2);
+            longitudeElement.textContent = position.coords.longitude.toFixed(2);
+
+            // Check the yaw angle and update the graphics
+            const yaw = eulerAngles.yaw;
+            const statusElement = document.getElementById('status');
+            statusElement.innerHTML = ''; // Clear previous content
+            if (yaw > -20 && yaw < 20) {
+                const checkElement = document.createElement('span');
+                checkElement.className = 'check';
+                checkElement.textContent = '✔️';
+                statusElement.appendChild(checkElement);
+            } else {
+                const xElement = document.createElement('span');
+                xElement.className = 'x';
+                xElement.textContent = '❌';
+                statusElement.appendChild(xElement);
+            }
 }
 
 function errorCallback(error) {
