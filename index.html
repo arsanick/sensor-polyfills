@@ -140,13 +140,11 @@ function getGeolocation() {
 }
 
 function successCallback(position) {
-  const latitudeElement = document.querySelector('#latitude');
-  const longitudeElement = document.querySelector('#longitude');
-  latitudeElement.textContent = position.coords.latitude.toFixed(2);
-  longitudeElement.textContent = position.coords.longitude.toFixed(2);
+  document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
+  document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
 
   // Call the function to update the status graphics with the yaw angle from the sensor
-  updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
+  // updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
 }
 
 function errorCallback(error) {
