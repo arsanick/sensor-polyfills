@@ -117,26 +117,28 @@ function getGeolocation() {
 }
 
 function successCallback(position) {
-            const latitudeElement = document.querySelector('#latitude');
-            const longitudeElement = document.querySelector('#longitude');
-            latitudeElement.textContent = position.coords.latitude.toFixed(2);
-            longitudeElement.textContent = position.coords.longitude.toFixed(2);
+  const latitudeElement = document.querySelector('#latitude');
+  const longitudeElement = document.querySelector('#longitude');
+  latitudeElement.textContent = position.coords.latitude.toFixed(2);
+  longitudeElement.textContent = position.coords.longitude.toFixed(2);
 
-            // Check the yaw angle and update the graphics
-            const yaw = eulerAngles.yaw;
-            const statusElement = document.getElementById('status');
-            statusElement.innerHTML = ''; // Clear previous content
-            if (yaw > -20 && yaw < 20) {
-                const checkElement = document.createElement('span');
-                checkElement.className = 'check';
-                checkElement.textContent = '✔️';
-                statusElement.appendChild(checkElement);
-            } else {
-                const xElement = document.createElement('span');
-                xElement.className = 'x';
-                xElement.textContent = '❌';
-                statusElement.appendChild(xElement);
-            }
+   // Check the yaw angle and update the graphics
+    // Check the yaw angle and update the graphics
+  const eulerAngles = quaternionToEuler(sensor.quaternion)
+  const yaw = eulerAngles.yaw;
+  const statusElement = document.getElementById('status');
+  statusElement.innerHTML = ''; // Clear previous content
+  if (yaw > -20 && yaw < 20) {
+      const checkElement = document.createElement('span');
+      checkElement.className = 'check';
+      checkElement.textContent = '✔️';
+      statusElement.appendChild(checkElement);
+  } else {
+      const xElement = document.createElement('span');
+      xElement.className = 'x';
+      xElement.textContent = '❌';
+      statusElement.appendChild(xElement);
+  }
 }
 
 function errorCallback(error) {
