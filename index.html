@@ -113,7 +113,7 @@ function updateStatusGraphics(yaw) {
 }
 
 // Geolocation code
-function requestGeolocationPermission() {
+/*function requestGeolocationPermission() {
   if ("permissions" in navigator) {
     navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
       if (result.state === 'granted') {
@@ -129,7 +129,7 @@ function requestGeolocationPermission() {
   } else {
     console.error("Permissions API is not available in this browser.");
   }
-}
+}*/
 
 function getGeolocation() {
   if ("geolocation" in navigator) {
@@ -146,7 +146,7 @@ function successCallback(position) {
   longitudeElement.textContent = position.coords.longitude.toFixed(2);
 
   // Call the function to update the status graphics with the yaw angle from the sensor
-  // updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
+  updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
 }
 
 function errorCallback(error) {
