@@ -17,7 +17,7 @@
       }
     }
     #geoBtn {
-      display: none; /* Hide the button by default */
+      display: none; /* Hide the button by default; This botton is not appearing when permission is denied */
     }
   </style>
 </head>
@@ -134,6 +134,7 @@ function handlePermission() {
     }
     result.addEventListener("change", () => {
       report(result.state);
+      // handlePermission(); // Suggestion to make the button appear. Call handlePermission again to update the button visibility
     });
   });
 }
