@@ -117,9 +117,10 @@ function updateStatusGraphics(yaw) {
   }
 }
 
-// Geolocation code using the button
 function handlePermission() {
+  console.log("Checking geolocation permission...");
   navigator.permissions.query({ name: "geolocation" }).then((result) => {
+    console.log("Permission state:", result.state);
     if (result.state === "granted") {
       report(result.state);
       geoBtn.style.display = "none";
@@ -130,12 +131,14 @@ function handlePermission() {
       getLocation();
     } else if (result.state === "denied") {
       report(result.state);
-      geoBtn.style.display = "inline";
+      geoBtn.style.display = "inline"; // This should make the button visible
     }
     result.addEventListener("change", () => {
-      //report(result.state);
-      handlePermission(); // Suggestion to make the button appear. Call handlePermission again to update the button visibility
+      console.log("Permission state changed:", result.state);
+      handlePermission(); // Call handlePermission again to update the button visibility
     });
+  }).catch((error) => {
+    console.error("Error querying permissions:", error);
   });
 }
 
@@ -145,7 +148,11 @@ function report(state) {
 
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+      enableHighAccuracy: true, // Optional: Request high accuracy position
+      timeout: 2000, // Optional: Set a timeout for the request
+      maximumAge: 2000 // Optional: Always get the current position
+    }););
   } else {
     console.error("Geolocation is not available.");
   }
