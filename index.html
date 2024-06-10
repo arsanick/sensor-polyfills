@@ -127,8 +127,8 @@ function handlePermission() {
       getLocation();
     } else if (result.state === "prompt") {
       report(result.state);
-      geoBtn.style.display = "none";
-      getLocation();
+      geoBtn.style.display = "inline";
+      //getLocation();
     } else if (result.state === "denied") {
       report(result.state);
       geoBtn.style.display = "inline"; // This should make the button visible
