@@ -134,7 +134,7 @@ function handlePermission() {
     }
     result.addEventListener("change", () => {
       report(result.state);
-      // handlePermission(); // Suggestion to make the button appear. Call handlePermission again to update the button visibility
+      handlePermission(); // Suggestion to make the button appear. Call handlePermission again to update the button visibility
     });
   });
 }
