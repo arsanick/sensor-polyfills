@@ -17,9 +17,9 @@
       }
     }
     #geoBtn {
-      display: none; /* Hide the button by default; This botton is not appearing when permission is denied */
+      display: none; /* Hide the button by default; This button is not appearing when permission is denied */
     }
-  </style>
+</style>
 </head>
 <body>
 
@@ -117,74 +117,56 @@ function updateStatusGraphics(yaw) {
   }
 }
 
-// Request geolocation permission when the page loads
-handlePermission();
-</script>
-
-<script>
-  // Define the handlePermission function in the global scope
-  function handlePermission() {
-    console.log("Checking geolocation permission...");
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      console.log("Permission state:", result.state);
-      if (result.state === "granted") {
-        report(result.state);
-        geoBtn.style.display = "none";
-        getLocation();
-      } else if (result.state === "prompt") {
-        report(result.state);
-        geoBtn.style.display = "inline";
-      } else if (result.state === "denied") {
-        report(result.state);
-        geoBtn.style.display = "inline"; // This should make the button visible
-      }
-      result.addEventListener("change", () => {
-        console.log("Permission state changed:", result.state);
-        handlePermission(); // Call handlePermission again to update the button visibility
-      });
-    }).catch((error) => {
-      console.error("Error querying permissions:", error);
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+      enableHighAccuracy: true, // Optional: Request high accuracy position
+      timeout: 2000, // Optional: Set a timeout for the request
+      maximumAge: 2000 // Optional: Always get the current position
     });
+  } else {
+    console.error("Geolocation is not available.");
   }
-  
-  function report(state) {
-    console.log(`Permission ${state}`);
-  }
+}
 
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-        enableHighAccuracy: true, // Optional: Request high accuracy position
-        timeout: 2000, // Optional: Set a timeout for the request
-        maximumAge: 2000 // Optional: Always get the current position
-      });
-    } else {
-      console.error("Geolocation is not available.");
-    }
-  }
+function successCallback(position) {
+  document.getElementById("geoBtn").style.display = "none";
+  document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
+  document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
 
-  function successCallback(position) {
-    document.querySelector('#latitude').textContent = position.coords.latitude.toFixed(2);
-    document.querySelector('#longitude').textContent = position.coords.longitude.toFixed(2);
-
-  // Call the function to update the status graphics with the yaw angle from the sensor
   // Check if the sensor and quaternion are defined before converting
-    if (sensor && sensor.quaternion) {
+  if (sensor && sensor.quaternion) {
     // Call the function to update the status graphics with the yaw angle from the sensor
-      updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
-    } else {
-      console.error("Sensor or quaternion is not defined.");
-    }
+    updateStatusGraphics(quaternionToEuler(sensor.quaternion).yaw);
+  } else {
+    console.error("Sensor or quaternion is not defined.");
   }
+}
 
-  function errorCallback(error) {
-    alert(`ERROR(${error.code}): ${error.message}`);
+function errorCallback(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      alert("User denied the request for Geolocation.");
+      document.getElementById("geoBtn").style.display = "inline";
+      break;
+    case error.POSITION_UNAVAILABLE:
+      alert("Location information is unavailable.");
+      document.getElementById("geoBtn").style.display = "inline";
+      break;
+    case error.TIMEOUT:
+      alert("The request to get user location timed out.");
+      document.getElementById("geoBtn").style.display = "inline";
+      break;
+    case error.UNKNOWN_ERROR:
+      alert("An unknown error occurred.");
+      document.getElementById("geoBtn").style.display = "inline";
+      break;
   }
+}
 
-  
-  // Add an event listener to the button
-  document.getElementById('geoBtn').addEventListener('click', handlePermission);
-  </script>
+// Add an event listener to the button
+document.getElementById('geoBtn').addEventListener('click', getLocation);
+</script>
 
 </body>
 </html>
