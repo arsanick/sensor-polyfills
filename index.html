@@ -120,7 +120,7 @@ function updateStatusGraphics(yaw) {
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
-      enableHighAccuracy: true, // Optional: Request high accuracy position
+      enableHighAccuracy: false, // Optional: Request high accuracy position
       timeout: 2000, // Optional: Set a timeout for the request
       maximumAge: 2000 // Optional: Always get the current position
     });
@@ -164,6 +164,7 @@ function errorCallback(error) {
   }
 }
 
+getLocation()
 // Add an event listener to the button
 document.getElementById('geoBtn').addEventListener('click', getLocation);
 </script>
