@@ -57,11 +57,13 @@ const DeviceOrientationMixin = (superclass, ...eventNames) => class extends supe
   }
 
   [activateCallback]() {
-    window.addEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {capture: true});
+    //window.addEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {capture: true});
+    window.addEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {signal: new AbortController().signal});
   }
 
   [deactivateCallback]() {
-    window.removeEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {capture: true});
+    //window.removeEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {capture: true});
+    window.removeEventListener(this[slot].eventName, this[handleEventCallback].bind(this), {signal: new AbortController().signal});
   }
 };
 
